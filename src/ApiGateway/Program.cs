@@ -1,10 +1,10 @@
-using ApiGateway.Handlers;
-using ApiGateway.Middleware;
+using BuildingBlocks.Infrastructure.Middleware;
+using BuildingBlocks.Infrastructure.Handlers;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ----------------- Serilog -----------------
+// ---------------- Serilog ----------------
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Console(
@@ -14,28 +14,24 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// ----------------- Services -----------------
-builder.Services.AddHttpLogging(_ => { });
-
+// ---------------- Services ----------------
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
-// 🔑 Register handler FIRST
+// 🔑 REQUIRED for DelegatingHandler
+builder.Services.AddHttpContextAccessor();
+
+// 🔑 Shared handler
 builder.Services.AddTransient<CorrelationIdDelegatingHandler>();
 
-// 🔑 Register HttpClient BEFORE Build()
 builder.Services.AddHttpClient("DownstreamClient")
     .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
 
-// ----------------- Build -----------------
+// ---------------- Build ----------------
 var app = builder.Build();
 
-// ----------------- Middleware pipeline -----------------
-
-// CorrelationId must run early
+// ---------------- Middleware ----------------
 app.UseMiddleware<CorrelationIdMiddleware>();
-
-// Serilog request logging AFTER correlation middleware
 app.UseSerilogRequestLogging();
 
 app.UseSwagger();

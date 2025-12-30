@@ -1,7 +1,8 @@
 using Serilog;
-using SubscriptionService.Handlers;
-using SubscriptionService.Middleware;
-
+//using SubscriptionService.Handlers;
+//using SubscriptionService.Middleware;
+using BuildingBlocks.Infrastructure.Middleware;
+using BuildingBlocks.Infrastructure.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 

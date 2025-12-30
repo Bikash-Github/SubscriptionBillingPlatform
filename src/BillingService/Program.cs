@@ -1,4 +1,5 @@
-using BillingService.Middleware;
+//using BillingService.Middleware;
+using BuildingBlocks.Infrastructure.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
