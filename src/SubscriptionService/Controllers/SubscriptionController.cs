@@ -32,4 +32,11 @@ public class SubscriptionController : ControllerBase
     {
         return Ok($"Subscription {id} cancelled");
     }
+
+    [HttpGet("ping")]
+    public IActionResult Ping()
+    {
+        _logger.LogInformation("Subscription service ping hit");
+        return Ok("Subscription Service OK");
+    }
 }

@@ -1,7 +1,7 @@
-﻿using Serilog.Context;
-
-namespace ApiGateway.Middleware
+﻿namespace SubscriptionService.Middleware
 {
+    using Serilog.Context;
+
     public class CorrelationIdMiddleware
     {
         private const string HeaderName = "X-Correlation-Id";
@@ -14,17 +14,11 @@ namespace ApiGateway.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            //Try to get the correlation ID from the incoming request headers, if not present generate a new one.
-            var correlationId = context.Request.Headers.TryGetValue(HeaderName, out var existing)
-                ? existing.ToString()
+            var correlationId = context.Request.Headers.TryGetValue(HeaderName, out var cid)
+                ? cid.ToString()
                 : Guid.NewGuid().ToString();
 
-            //set the correlation ID in the response headers for client reference
             context.Response.Headers[HeaderName] = correlationId;
-
-            //set the correlation ID in the HttpContext items for downstream access
-            context.Items["CorrelationId"] = correlationId;
-
 
             using (LogContext.PushProperty("CorrelationId", correlationId))
             {
@@ -32,4 +26,5 @@ namespace ApiGateway.Middleware
             }
         }
     }
+
 }
