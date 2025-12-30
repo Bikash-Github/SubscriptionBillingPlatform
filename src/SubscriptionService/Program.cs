@@ -1,4 +1,5 @@
 using Serilog;
+using SubscriptionService.Handlers;
 using SubscriptionService.Middleware;
 
 
@@ -18,7 +19,21 @@ builder.Services.AddHttpLogging(_ => { });
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddHttpContextAccessor();
+
+// 🔑 Register handler FIRST
+builder.Services.AddTransient<CorrelationIdDelegatingHandler>();
+
+// 🔑 Register HttpClient BEFORE Build()
+builder.Services.AddHttpClient("BillingClient")
+    .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
+
+// ----------------- Build -----------------
 var app = builder.Build();
+
+// ----------------- Middleware pipeline -----------------
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 
