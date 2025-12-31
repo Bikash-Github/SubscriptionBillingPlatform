@@ -1,6 +1,9 @@
-using BuildingBlocks.Infrastructure.Middleware;
 using BuildingBlocks.Infrastructure.Handlers;
+using BuildingBlocks.Infrastructure.Middleware;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,14 @@ builder.Services.AddTransient<CorrelationIdDelegatingHandler>();
 builder.Services.AddHttpClient("DownstreamClient")
     .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
 
+
+// Health Checks
+builder.Services.AddHealthChecks()
+    .AddSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        name: "sqlserver",
+        timeout: TimeSpan.FromSeconds(5));
+
 // ---------------- Build ----------------
 var app = builder.Build();
 
@@ -38,7 +49,39 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapControllers();
-app.MapGet("/health/live", () => "Alive");
-app.MapGet("/health/ready", () => "Ready");
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false, // liveness = app is running
+    ResponseWriter = WriteHealthResponse
+});
+
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = _ => true, // readiness = all checks
+    ResponseWriter = WriteHealthResponse
+});
 
 app.Run();
+
+static Task WriteHealthResponse(HttpContext context, HealthReport report)
+{
+    context.Response.ContentType = "application/json";
+
+    var response = new
+    {
+        status = report.Status.ToString(),
+        checks = report.Entries.Select(entry => new
+        {
+            name = entry.Key,
+            status = entry.Value.Status.ToString(),
+            error = entry.Value.Exception?.Message
+        })
+    };
+
+    return context.Response.WriteAsync(
+        JsonSerializer.Serialize(response));
+}
+
+
+
