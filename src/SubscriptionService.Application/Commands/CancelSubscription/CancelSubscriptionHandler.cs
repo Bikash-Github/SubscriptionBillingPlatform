@@ -1,8 +1,10 @@
-﻿using SubscriptionService.Domain.Interfaces;
+﻿using MediatR;
+using SubscriptionService.Domain.Interfaces;
 
 namespace SubscriptionService.Application.Commands.CancelSubscription;
 
 public class CancelSubscriptionHandler
+    : IRequestHandler<CancelSubscriptionCommand, Unit>
 {
     private readonly ISubscriptionRepository _repository;
 
@@ -11,7 +13,9 @@ public class CancelSubscriptionHandler
         _repository = repository;
     }
 
-    public async Task Handle(CancelSubscriptionCommand command)
+    public async Task<Unit> Handle(
+        CancelSubscriptionCommand command,
+        CancellationToken cancellationToken)
     {
         var subscription = await _repository.GetByIdAsync(command.SubscriptionId);
 
@@ -19,7 +23,8 @@ public class CancelSubscriptionHandler
             throw new InvalidOperationException("Subscription not found");
 
         subscription.Cancel();
-
         await _repository.UpdateAsync(subscription);
+
+        return Unit.Value;
     }
 }

@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using System.Text.Json;
+using SubscriptionService.Domain.Interfaces;
+using SubscriptionService.Infrastructure.Persistence;
+using SubscriptionService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,18 @@ builder.Services.AddHealthChecks()
         builder.Configuration.GetConnectionString("DefaultConnection"),
         name: "sqlserver",
         timeout: TimeSpan.FromSeconds(5));
+
+
+builder.Services.AddSingleton<SqlConnectionFactory>();
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+
+// MediatR
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(
+        typeof(SubscriptionService.Application.Commands.CreateSubscription.CreateSubscriptionCommand)
+            .Assembly));
+
+
 
 // ----------------- Build -----------------
 var app = builder.Build();

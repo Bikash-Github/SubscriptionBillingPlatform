@@ -1,9 +1,10 @@
-﻿using SubscriptionService.Domain.Aggregates;
+﻿using MediatR;
+using SubscriptionService.Domain.Aggregates;
 using SubscriptionService.Domain.Interfaces;
 
 namespace SubscriptionService.Application.Commands.CreateSubscription;
 
-public class CreateSubscriptionHandler
+public class CreateSubscriptionHandler : IRequestHandler<CreateSubscriptionCommand, Guid>
 {
     private readonly ISubscriptionRepository _repository;
 
@@ -12,7 +13,8 @@ public class CreateSubscriptionHandler
         _repository = repository;
     }
 
-    public async Task<Guid> Handle(CreateSubscriptionCommand command)
+    public async Task<Guid> Handle(CreateSubscriptionCommand command,
+        CancellationToken cancellationToken)
     {
         var subscription = new Subscription(
             command.CustomerId,

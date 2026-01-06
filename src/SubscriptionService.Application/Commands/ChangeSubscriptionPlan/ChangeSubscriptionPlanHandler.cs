@@ -1,8 +1,10 @@
-﻿using SubscriptionService.Domain.Interfaces;
+﻿using MediatR;
+using SubscriptionService.Domain.Interfaces;
 
 namespace SubscriptionService.Application.Commands.ChangeSubscriptionPlan;
 
 public class ChangeSubscriptionPlanHandler
+    : IRequestHandler<ChangeSubscriptionPlanCommand, Unit>
 {
     private readonly ISubscriptionRepository _repository;
 
@@ -11,7 +13,9 @@ public class ChangeSubscriptionPlanHandler
         _repository = repository;
     }
 
-    public async Task Handle(ChangeSubscriptionPlanCommand command)
+    public async Task<Unit> Handle(
+        ChangeSubscriptionPlanCommand command,
+        CancellationToken cancellationToken)
     {
         var subscription = await _repository.GetByIdAsync(command.SubscriptionId);
 
@@ -19,7 +23,8 @@ public class ChangeSubscriptionPlanHandler
             throw new InvalidOperationException("Subscription not found");
 
         subscription.ChangePlan(command.NewPlanCode);
-
         await _repository.UpdateAsync(subscription);
+
+        return Unit.Value;
     }
 }

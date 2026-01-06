@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "src\ApiGateway\ApiGateway.csproj", "{484D3834-502D-4394-AF8B-16EE09BBA0F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService", "src\SubscriptionService\SubscriptionService.csproj", "{166223D6-4457-4B53-B78A-3BD332894DCF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService.API", "src\SubscriptionService\SubscriptionService.API.csproj", "{166223D6-4457-4B53-B78A-3BD332894DCF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingService", "src\BillingService\BillingService.csproj", "{1F1EA67C-D8FE-4D66-9A24-1DB56F7FFB90}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService.Domain", "src\SubscriptionService.Domain\SubscriptionService.Domain.csproj", "{2755EA36-DD10-4300-8BDE-C3464DB1538C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService.Application", "src\SubscriptionService.Application\SubscriptionService.Application.csproj", "{798AFDB0-1232-48A0-BF74-7CBD6935A40C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService.Infrastructure", "src\SubscriptionService.Infrastructure\SubscriptionService.Infrastructure.csproj", "{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{798AFDB0-1232-48A0-BF74-7CBD6935A40C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{798AFDB0-1232-48A0-BF74-7CBD6935A40C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{798AFDB0-1232-48A0-BF74-7CBD6935A40C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

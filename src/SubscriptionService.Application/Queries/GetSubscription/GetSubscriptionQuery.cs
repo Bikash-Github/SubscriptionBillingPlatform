@@ -1,3 +1,7 @@
-﻿namespace SubscriptionService.Application.Queries.GetSubscription;
+﻿
+using MediatR;
+using SubscriptionService.Application.DTOs;
 
-public record GetSubscriptionQuery(Guid SubscriptionId);
+namespace SubscriptionService.Application.Queries.GetSubscription;
+
+public record GetSubscriptionQuery(Guid SubscriptionId) : IRequest<SubscriptionDto?>;

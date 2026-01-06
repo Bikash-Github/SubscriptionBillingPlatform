@@ -1,3 +1,6 @@
-﻿namespace SubscriptionService.Application.Commands.CancelSubscription;
+﻿using MediatR;
 
-public record CancelSubscriptionCommand(Guid SubscriptionId);
+namespace SubscriptionService.Application.Commands.CancelSubscription;
+
+public record CancelSubscriptionCommand(Guid SubscriptionId)
+    : IRequest<Unit>;
