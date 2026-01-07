@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using SubscriptionService.Application.DTOs;
+using SubscriptionService.Contracts.Responses;
 using SubscriptionService.Domain.Interfaces;
 
 namespace SubscriptionService.Application.Queries.GetSubscription;
 
 public class GetSubscriptionHandler
-    : IRequestHandler<GetSubscriptionQuery, SubscriptionDto?>
+    : IRequestHandler<GetSubscriptionQuery, SubscriptionResponse?>
 {
     private readonly ISubscriptionRepository _repository;
 
@@ -14,23 +14,23 @@ public class GetSubscriptionHandler
         _repository = repository;
     }
 
-    public async Task<SubscriptionDto?> Handle(
+    public async Task<SubscriptionResponse?> Handle(
         GetSubscriptionQuery query,
         CancellationToken cancellationToken)
     {
-        var subscription = await _repository.GetByIdAsync(query.SubscriptionId);
+        var subscription =
+            await _repository.GetByIdAsync(query.SubscriptionId);
 
         if (subscription == null)
             return null;
 
-        return new SubscriptionDto
-        {
-            Id = subscription.Id,
-            CustomerId = subscription.CustomerId,
-            PlanCode = subscription.PlanCode,
-            Status = subscription.Status.ToString(),
-            StartDate = subscription.StartDate,
-            EndDate = subscription.EndDate
-        };
+        return new SubscriptionResponse(
+            subscription.Id,
+            subscription.CustomerId,
+            subscription.PlanCode,
+            subscription.Status.ToString(),
+            subscription.StartDate,
+            subscription.EndDate
+        );
     }
 }

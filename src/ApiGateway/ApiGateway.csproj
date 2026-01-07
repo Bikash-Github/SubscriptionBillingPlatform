@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
+    <ProjectReference Include="..\SubscriptionService.Contracts\SubscriptionService.Contracts.csproj" />
   </ItemGroup>
   
 </Project>

@@ -19,7 +19,7 @@ public class Subscription
         CustomerId = customerId;
         PlanCode = planCode;
         Status = SubscriptionStatus.Active;
-        StartDate = DateTime.UtcNow;
+        StartDate = DateTime.Now;
     }
 
     public void Cancel()

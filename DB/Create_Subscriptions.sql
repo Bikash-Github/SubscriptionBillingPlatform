@@ -1,5 +1,6 @@
+use SubscriptionDB
 
-CREATE TABLE Subscriptions (
+CREATE TABLE Subscriptions(
     Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
     CustomerId UNIQUEIDENTIFIER NOT NULL,
     PlanCode NVARCHAR(50) NOT NULL,

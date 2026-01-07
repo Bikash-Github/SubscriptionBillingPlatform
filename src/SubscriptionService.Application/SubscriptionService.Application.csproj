@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SubscriptionService.Contracts\SubscriptionService.Contracts.csproj" />
     <ProjectReference Include="..\SubscriptionService.Domain\SubscriptionService.Domain.csproj" />
   </ItemGroup>
 

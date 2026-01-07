@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService.Applica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService.Infrastructure", "src\SubscriptionService.Infrastructure\SubscriptionService.Infrastructure.csproj", "{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionService.Contracts", "src\SubscriptionService.Contracts\SubscriptionService.Contracts.csproj", "{A4651D32-222F-4ED3-9DBD-DE652790CB50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{348AA867-3FCA-4694-BC35-ADFEE4DBBA0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4651D32-222F-4ED3-9DBD-DE652790CB50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4651D32-222F-4ED3-9DBD-DE652790CB50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4651D32-222F-4ED3-9DBD-DE652790CB50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4651D32-222F-4ED3-9DBD-DE652790CB50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SubscriptionService.Application.Commands.CreateSubscription;
 using SubscriptionService.Application.Commands.CancelSubscription;
 using SubscriptionService.Application.Commands.ChangeSubscriptionPlan;
+using SubscriptionService.Application.Commands.CreateSubscription;
 using SubscriptionService.Application.Queries.GetSubscription;
+using SubscriptionService.Contracts.Requests;
 
 [ApiController]
 [Route("subscriptions")]
@@ -31,18 +32,28 @@ public class SubscriptionController : ControllerBase
     // -----------------------------
     [HttpPost]
     public async Task<IActionResult> Create(
-        [FromBody] CreateSubscriptionCommand command)
+    [FromBody] CreateSubscriptionRequest request)
     {
-        _logger.LogInformation(
-            "Creating subscription for CustomerId {CustomerId}",
-            command.CustomerId);
+        // 1️. Create command
+        var command = new CreateSubscriptionCommand(
+            request.CustomerId,
+            request.PlanCode);
 
-        var subscriptionId = await _mediator.Send(command);
+        // 2️. Execute command → get Id
+        var id = await _mediator.Send(command);
 
+        // 3️. Query full state
+        var response =
+            await _mediator.Send(new GetSubscriptionQuery(id));
+
+        if (response == null)
+            return StatusCode(500, "Subscription created but not found");
+
+        // 4️. Return contract response
         return CreatedAtAction(
             nameof(GetById),
-            new { id = subscriptionId },
-            subscriptionId);
+            new { id },
+            response);
     }
 
     // -----------------------------

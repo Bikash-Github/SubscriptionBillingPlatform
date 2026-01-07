@@ -18,7 +18,7 @@ public class SubscriptionRepository : ISubscriptionRepository
     public async Task AddAsync(Subscription subscription)
     {
         const string sql = @"
-            INSERT INTO Subscriptions
+            INSERT INTO dbo.Subscriptions
             (Id, CustomerId, PlanCode, Status, StartDate, EndDate)
             VALUES
             (@Id, @CustomerId, @PlanCode, @Status, @StartDate, @EndDate)";
