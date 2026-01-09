@@ -1,44 +1,33 @@
-﻿using BuildingBlocks.Infrastructure.Correlation;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace BuildingBlocks.Infrastructure.Handlers
+namespace BuildingBlocks.Infrastructure.Handlers;
+
+public class CorrelationIdDelegatingHandler : DelegatingHandler
 {
-    public class CorrelationIdDelegatingHandler : DelegatingHandler
+    private const string CorrelationIdHeader = "X-Correlation-Id";
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public CorrelationIdDelegatingHandler(
+        IHttpContextAccessor httpContextAccessor)
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        public CorrelationIdDelegatingHandler(
-            IHttpContextAccessor httpContextAccessor)
+    protected override Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken)
+    {
+        var context = _httpContextAccessor.HttpContext;
+
+        if (context != null &&
+            context.Items.TryGetValue("CorrelationId", out var correlationId) &&
+            correlationId != null)
         {
-            _httpContextAccessor = httpContextAccessor;
+            request.Headers.TryAddWithoutValidation(
+                CorrelationIdHeader,
+                correlationId.ToString());
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            var context = _httpContextAccessor.HttpContext;
-
-            if (context != null &&
-                context.Items.TryGetValue(
-                    CorrelationHeaders.CorrelationId, out var correlationIdObj))
-            {
-                var correlationId = correlationIdObj?.ToString();
-
-                if (!string.IsNullOrWhiteSpace(correlationId) &&
-                    !request.Headers.Contains(CorrelationHeaders.CorrelationId))
-                {
-                    request.Headers.Add(
-                        CorrelationHeaders.CorrelationId, correlationId);
-                }
-            }
-
-            return await base.SendAsync(request, cancellationToken);
-        }
+        return base.SendAsync(request, cancellationToken);
     }
 }

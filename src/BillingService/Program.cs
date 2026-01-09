@@ -31,7 +31,7 @@ var app = builder.Build();
 
 // MUST be before Serilog request logging
 app.UseMiddleware<CorrelationIdMiddleware>();
-
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseSerilogRequestLogging();
 
 app.UseSwagger();

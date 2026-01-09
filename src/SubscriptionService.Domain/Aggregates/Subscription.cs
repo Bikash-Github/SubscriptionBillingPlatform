@@ -1,4 +1,5 @@
-﻿using SubscriptionService.Domain.ValueObjects;
+﻿
+using SubscriptionService.Domain.ValueObjects;
 
 namespace SubscriptionService.Domain.Aggregates;
 
