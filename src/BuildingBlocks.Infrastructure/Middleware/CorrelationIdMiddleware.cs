@@ -1,42 +1,40 @@
-﻿using BuildingBlocks.Infrastructure.Correlation;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Serilog.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BuildingBlocks.Infrastructure.Middleware
+namespace BuildingBlocks.Infrastructure.Middleware;
+
+public class CorrelationIdMiddleware
 {
-    public class CorrelationIdMiddleware
+    private const string CorrelationIdHeader = "X-Correlation-Id";
+    private readonly RequestDelegate _next;
+    private readonly ILogger<CorrelationIdMiddleware> _logger;
+
+    public CorrelationIdMiddleware(
+        RequestDelegate next,
+        ILogger<CorrelationIdMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+        _logger = logger;
+    }
 
-        public CorrelationIdMiddleware(RequestDelegate next)
+    public async Task Invoke(HttpContext context)
+    {
+        var correlationId =
+            context.Request.Headers.ContainsKey(CorrelationIdHeader)
+                ? context.Request.Headers[CorrelationIdHeader].ToString()
+                : Guid.NewGuid().ToString();
+
+        // 🔑 SINGLE SOURCE OF TRUTH
+        context.Items["CorrelationId"] = correlationId;
+
+        // Add to response headers
+        context.Response.Headers[CorrelationIdHeader] = correlationId;
+
+        // Add to logging scope
+        using (LogContext.PushProperty("CorrelationId", correlationId))
         {
-            _next = next;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-            var correlationId =
-                context.Request.Headers.TryGetValue(
-                    CorrelationHeaders.CorrelationId, out var cid)
-                    ? cid.ToString()
-                    : Guid.NewGuid().ToString();
-
-            // 🔑 Store for downstream usage (VERY IMPORTANT)
-            context.Items[CorrelationHeaders.CorrelationId] = correlationId;
-
-            // Return it to caller
-            context.Response.Headers[CorrelationHeaders.CorrelationId] = correlationId;
-
-            // Push into Serilog context
-            using (LogContext.PushProperty("CorrelationId", correlationId))
-            {
-                await _next(context);
-            }
+            await _next(context);
         }
     }
 }

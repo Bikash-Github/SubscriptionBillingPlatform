@@ -4,11 +4,22 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Handlers\**" />
+    <Compile Remove="Middleware\**" />
+    <Content Remove="Handlers\**" />
+    <Content Remove="Middleware\**" />
+    <EmbeddedResource Remove="Handlers\**" />
+    <EmbeddedResource Remove="Middleware\**" />
+    <None Remove="Handlers\**" />
+    <None Remove="Middleware\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+    <PackageReference Include="MediatR" Version="14.0.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
@@ -22,6 +33,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
+    <ProjectReference Include="..\SubscriptionService.Application\SubscriptionService.Application.csproj" />
+    <ProjectReference Include="..\SubscriptionService.Contracts\SubscriptionService.Contracts.csproj" />
+    <ProjectReference Include="..\SubscriptionService.Domain\SubscriptionService.Domain.csproj" />
+    <ProjectReference Include="..\SubscriptionService.Infrastructure\SubscriptionService.Infrastructure.csproj" />
   </ItemGroup>
   
 </Project>

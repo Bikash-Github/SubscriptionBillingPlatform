@@ -1,8 +1,15 @@
 using BuildingBlocks.Infrastructure.Handlers;
 using BuildingBlocks.Infrastructure.Middleware;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
+using SubscriptionService.Application.Behaviors;
+using SubscriptionService.Application.Commands.CreateSubscription;
+using SubscriptionService.Domain.Interfaces;
+using SubscriptionService.Infrastructure.Persistence;
+using SubscriptionService.Infrastructure.Repositories;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,14 +46,32 @@ builder.Services.AddHealthChecks()
         name: "sqlserver",
         timeout: TimeSpan.FromSeconds(5));
 
+
+builder.Services.AddSingleton<SqlConnectionFactory>();
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+
+// MediatR
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(
+        typeof(SubscriptionService.Application.Commands.CreateSubscription.CreateSubscriptionCommand)
+            .Assembly));
+
+// FluentValidation
+builder.Services.AddValidatorsFromAssembly(
+    typeof(CreateSubscriptionCommand).Assembly);
+
+builder.Services.AddTransient(
+    typeof(IPipelineBehavior<,>),
+    typeof(ValidationBehavior<,>));
+
+
 // ----------------- Build -----------------
 var app = builder.Build();
 
 // ----------------- Middleware pipeline -----------------
 
 app.UseMiddleware<CorrelationIdMiddleware>();
-
-
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseSerilogRequestLogging();
 
 app.UseSwagger();
