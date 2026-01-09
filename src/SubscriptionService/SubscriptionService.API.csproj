@@ -27,6 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Handlers\" />
+    <Folder Include="Middleware\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
     <ProjectReference Include="..\SubscriptionService.Application\SubscriptionService.Application.csproj" />
     <ProjectReference Include="..\SubscriptionService.Contracts\SubscriptionService.Contracts.csproj" />
