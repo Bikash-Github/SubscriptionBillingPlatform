@@ -43,6 +43,7 @@ var app = builder.Build();
 
 // ---------------- Middleware ----------------
 app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseSerilogRequestLogging();
 
 app.UseSwagger();

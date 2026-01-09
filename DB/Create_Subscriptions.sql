@@ -1,0 +1,10 @@
+use SubscriptionDB
+
+CREATE TABLE Subscriptions(
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    CustomerId UNIQUEIDENTIFIER NOT NULL,
+    PlanCode NVARCHAR(50) NOT NULL,
+    Status INT NOT NULL,
+    StartDate DATETIME2 NOT NULL,
+    EndDate DATETIME2 NULL
+);
