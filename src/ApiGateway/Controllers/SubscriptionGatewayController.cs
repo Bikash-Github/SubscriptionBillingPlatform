@@ -1,7 +1,7 @@
 ﻿
 namespace ApiGateway.Controllers
 {
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using SubscriptionService.Contracts.Requests;
     using System.Text;
@@ -28,6 +28,11 @@ namespace ApiGateway.Controllers
         // ----------------------------------
         // CREATE SUBSCRIPTION (FORWARD)
         // ----------------------------------
+
+        [Authorize]
+        //[Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "User,Admin")]
+
         [HttpPost]
         public async Task<IActionResult> CreateSubscription(
     [FromBody] CreateSubscriptionRequest request)
@@ -56,6 +61,7 @@ namespace ApiGateway.Controllers
         // ----------------------------------
         // GET SUBSCRIPTION (FORWARD)
         // ----------------------------------
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSubscription(Guid id)
         {
@@ -77,6 +83,8 @@ namespace ApiGateway.Controllers
         // ----------------------------------
         // CANCEL SUBSCRIPTION (FORWARD)
         // ----------------------------------
+
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> CancelSubscription(Guid id)
         {
@@ -94,6 +102,7 @@ namespace ApiGateway.Controllers
         // ----------------------------------
         // CHANGE SUBSCRIPTION PLAN (FORWARD)
         // ----------------------------------
+        [Authorize]
         [HttpPost("{id}/change-plan")]
         public async Task<IActionResult> ChangeSubscriptionPlan(
             Guid id,
