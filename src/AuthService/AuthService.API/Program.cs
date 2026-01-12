@@ -24,6 +24,7 @@ builder.Services.AddScoped<SqlConnectionFactory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
 
 
 // Authentication (JWT validation - future safe)

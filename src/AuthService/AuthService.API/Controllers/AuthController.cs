@@ -1,5 +1,6 @@
 ﻿using AuthService.Application.DTOs;
 using AuthService.Application.Interfaces;
+using AuthService.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.API.Controllers;
@@ -38,4 +39,35 @@ public class AuthController : ControllerBase
 
         return Ok(new LoginResponse(token, 3600));
     }
+
+    [HttpPost("google")]
+    public async Task<IActionResult> GoogleLogin(
+    GoogleLoginRequest request,
+    [FromServices] IGoogleTokenValidator googleValidator)
+    {
+        var email = await googleValidator.ValidateAndGetEmailAsync(request.IdToken);
+
+        var user = await _users.GetByEmailAsync(email);
+
+        if (user == null)
+        {
+            //No password required if the user signin through Google.
+            user = new User(
+                Guid.NewGuid(),
+                email,
+                role: "User",
+                authProvider: "Google",
+                PasswordHash: "");
+
+            await _users.CreateAsync(user);
+        }
+
+        if (!user.IsActive)
+            return Unauthorized("User is disabled");
+
+        var token = _jwt.GenerateToken(user);
+
+        return Ok(new LoginResponse(token, 3600));
+    }
+
 }

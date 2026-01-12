@@ -53,4 +53,24 @@ public class UserRepository : IUserRepository
 
         return user;
     }
+
+    public async Task CreateAsync(User user)
+    {
+        const string sql = """
+        INSERT INTO Users
+        (Id, Email, PasswordHash, Role, AuthProvider, IsActive, CreatedAt)
+        VALUES
+        (@Id, @Email, NULL, @Role, @AuthProvider, 1, GETUTCDATE())
+    """;
+
+        using var connection = _factory.CreateConnection();
+
+        await connection.ExecuteAsync(sql, new
+        {
+            user.Id,
+            user.Email,
+            user.Role,
+            user.AuthProvider
+        });
+    }
 }
