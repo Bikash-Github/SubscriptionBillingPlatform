@@ -11,6 +11,9 @@ using SubscriptionService.Domain.Interfaces;
 using SubscriptionService.Infrastructure.Persistence;
 using SubscriptionService.Infrastructure.Repositories;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +42,25 @@ builder.Services.AddTransient<CorrelationIdDelegatingHandler>();
 builder.Services.AddHttpClient("BillingClient")
     .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
 
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "AuthService",
+            ValidAudience = "subscription-platform",
+            IssuerSigningKey =
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes("THIS_IS_A_SUPER_LONG_256_BIT_SECRET_KEY_1234567890"))
+        };
+    });
+
+
+
 // Health Checks
 builder.Services.AddHealthChecks()
     .AddSqlServer(
@@ -63,6 +85,7 @@ builder.Services.AddValidatorsFromAssembly(
 builder.Services.AddTransient(
     typeof(IPipelineBehavior<,>),
     typeof(ValidationBehavior<,>));
+
 
 
 // ----------------- Build -----------------

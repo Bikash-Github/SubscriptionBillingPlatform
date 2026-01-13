@@ -1,0 +1,14 @@
+
+use AuthDB
+
+CREATE TABLE Users (
+    Id UNIQUEIDENTIFIER DEFAULT NEWSEQUENTIALID() PRIMARY KEY,
+    Email NVARCHAR(256) NOT NULL UNIQUE,
+    PasswordHash NVARCHAR(512) NULL,
+    Role NVARCHAR(50) NOT NULL,
+    AuthProvider NVARCHAR(50) NOT NULL, -- Local | Google
+    IsActive BIT NOT NULL,
+    CreatedAt DATETIME2 NOT NULL
+);
+
+
