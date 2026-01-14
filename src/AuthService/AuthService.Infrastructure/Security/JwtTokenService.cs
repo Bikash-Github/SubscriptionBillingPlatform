@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace AuthService.Infrastructure.Security;
@@ -17,7 +18,7 @@ public class JwtTokenService : IJwtTokenService
         _config = config;
     }
 
-    public string GenerateToken(User user)
+    public string GenerateAccessToken(User user)
     {
         var claims = new[]
         {
@@ -35,10 +36,16 @@ public class JwtTokenService : IJwtTokenService
             issuer: _config["Jwt:Issuer"],
             audience: _config["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(60),
+            expires: DateTime.UtcNow.AddMinutes(10),
             signingCredentials: creds
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    public string GenerateRefreshToken()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+    }
+
 }

@@ -73,4 +73,17 @@ public class UserRepository : IUserRepository
             user.AuthProvider
         });
     }
+
+    public async Task<User?> GetByIdAsync(Guid id)
+    {
+        const string sql = """
+        SELECT Id, Email, Role, AuthProvider, IsActive
+        FROM Users
+        WHERE Id = @Id
+    """;
+
+        using var conn = _factory.CreateConnection();
+        return await conn.QuerySingleOrDefaultAsync<User>(sql, new { Id = id });
+    }
+
 }

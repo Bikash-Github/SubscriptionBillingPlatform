@@ -1,3 +1,3 @@
 ﻿namespace AuthService.Application.DTOs;
 
-public record LoginResponse(string AccessToken, int ExpiresIn);
+public record LoginResponse(string AccessToken, string RefreshToken, int ExpiresIn);
