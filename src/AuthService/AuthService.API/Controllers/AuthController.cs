@@ -1,4 +1,5 @@
-﻿using AuthService.Application.DTOs;
+﻿using AuthService.API.Requests;
+using AuthService.API.Responses;
 using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -127,6 +128,24 @@ public class AuthController : ControllerBase
             newAccessToken,
             newRefreshTokenValue,
             1800));
+    }
+
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(LogoutRequest request)
+    {
+        var token = await _refreshTokenRepo.GetAsync(request.RefreshToken);
+
+        if (token == null)
+            return Ok(); // Idempotent logout
+
+        if (!token.IsRevoked)
+        {
+            token.Revoke("logout");
+            await _refreshTokenRepo.UpdateAsync(token);
+        }
+
+        return Ok();
     }
 
 

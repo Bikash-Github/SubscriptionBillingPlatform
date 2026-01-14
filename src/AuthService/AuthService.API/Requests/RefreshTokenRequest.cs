@@ -1,5 +1,5 @@
 ﻿
-namespace AuthService.Application.DTOs
+namespace AuthService.API.Requests
 {
     public record RefreshTokenRequest(string RefreshToken);
 

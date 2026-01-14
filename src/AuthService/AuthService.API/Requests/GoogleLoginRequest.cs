@@ -1,3 +1,3 @@
-﻿namespace AuthService.Application.DTOs;
+﻿namespace AuthService.API.Requests;
 
 public record GoogleLoginRequest(string IdToken);
