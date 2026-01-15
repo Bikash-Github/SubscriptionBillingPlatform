@@ -1,0 +1,15 @@
+
+Use AuthDB;
+
+go
+
+CREATE TABLE RefreshTokens
+(
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    UserId UNIQUEIDENTIFIER NOT NULL,
+    Token NVARCHAR(500) NOT NULL,
+    ExpiresAt DATETIME2 NOT NULL,
+    IsRevoked BIT NOT NULL DEFAULT 0,
+    CreatedAt DATETIME2 NOT NULL,
+    ReplacedByToken NVARCHAR(500) NULL
+);
