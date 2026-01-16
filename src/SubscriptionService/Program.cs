@@ -2,18 +2,21 @@ using BuildingBlocks.Infrastructure.Handlers;
 using BuildingBlocks.Infrastructure.Middleware;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using StackExchange.Redis;
 using SubscriptionService.Application.Behaviors;
 using SubscriptionService.Application.Commands.CreateSubscription;
+using SubscriptionService.Application.Interfaces;
 using SubscriptionService.Domain.Interfaces;
+using SubscriptionService.Infrastructure.Caching;
 using SubscriptionService.Infrastructure.Persistence;
 using SubscriptionService.Infrastructure.Repositories;
-using System.Text.Json;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,6 +89,11 @@ builder.Services.AddTransient(
     typeof(IPipelineBehavior<,>),
     typeof(ValidationBehavior<,>));
 
+builder.Services.AddSingleton<IConnectionMultiplexer>(
+    ConnectionMultiplexer.Connect(
+        builder.Configuration.GetConnectionString("Redis")));
+
+builder.Services.AddScoped<ICacheService, RedisCacheService>();
 
 
 // ----------------- Build -----------------
