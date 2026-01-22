@@ -419,5 +419,4 @@ The system is intentionally built using only free, local resources, making it ea
       
       DB Design with MS SQL Server.
 
-🔗 LinkedIn:
-www.linkedin.com/in/bikashpattanayak-api-architect
+
